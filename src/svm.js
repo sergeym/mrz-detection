@@ -1,25 +1,8 @@
 'use strict';
-const ENVIRONMENT_IS_WEB = typeof window === 'object';
-const ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
 
 const path = require('path');
 var fs;
 
-// babelify will generate distinct names if we define
-// the same constants both in "if" and "else" blocks
-// Variables are fine for me...
-
-/* global location */
-/*
-const fs = require('../../../static-fs.js');
-var _readFile=_fs.readFile;
-  _fs.readFile=function(url,encoding){
-    var dirname = __dirname.split('/');
-    dirname.pop();
-    url = url.replace(dirname.join('/'), '');
-    return _readFile(url,encoding);
-}
-*/
 const SVMPromise = Promise.resolve(require('libsvm-js/asm'));
 
 const hog = require('hog-features');

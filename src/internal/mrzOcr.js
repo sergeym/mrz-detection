@@ -2,10 +2,11 @@
 
 const { getLinesFromImage, doOcrOnLines } = require('ocr-tools');
 
-const { predictImages } = require('../svm');
+const { predictImages } = require('../svm')({fs: _options.fs});
 
+var _options;
 async function mrzOcr(image, fontFingerprint, options = {}) {
-  options = Object.assign({}, { method: 'svm' }, options);
+  _options = options = Object.assign({}, { method: 'svm' }, options);
   let { lines, mask, painted, averageSurface } = getLinesFromImage(
     image,
     options

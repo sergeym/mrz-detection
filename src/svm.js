@@ -3,45 +3,24 @@ const ENVIRONMENT_IS_WEB = typeof window === 'object';
 const ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
 
 const path = require('path');
+var fs;
 
 // babelify will generate distinct names if we define
 // the same constants both in "if" and "else" blocks
 // Variables are fine for me...
-var fs;
-var SVMPromise;
 
-if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
-  const request = require('request-promise');
-  fs = {
-    readFile: function (url, encoding) {
-      var dirname = __dirname.split('/');
-      dirname.pop();
-      url = url.replace(dirname.join('/'), '');
-      return request({
-        /* global self */
-        /* global location */
-        /* eslint no-undef: "error" */
-        url: ((self && self.config && self.config.fsRootUrl) ? `${self.config.fsRootUrl}/${url}` : `${location.origin}/${url}`),
-        encoding: null,
-        resolveWithFullResponse: false
-      })
-        .then(function (body) {
-          var buf = Buffer.from(body);
-          return (encoding) ? buf.toString(encoding) : buf;
-        });
-    },
-    writeFile: function () {
-      throw new Error('writeFile not implemented');
-    }
-  };
-  SVMPromise = Promise.resolve(require('libsvm-js/asm'));
-} else {
-  // use a variable for the module name so that browserify does not include it
-  var _module = 'fs-extra';
-  fs = require(_module);
-  _module = 'libsvm-js/wasm';
-  SVMPromise = Promise.resolve(require(_module));
+/* global location */
+/*
+const fs = require('../../../static-fs.js');
+var _readFile=_fs.readFile;
+  _fs.readFile=function(url,encoding){
+    var dirname = __dirname.split('/');
+    dirname.pop();
+    url = url.replace(dirname.join('/'), '');
+    return _readFile(url,encoding);
 }
+*/
+const SVMPromise = Promise.resolve(require('libsvm-js/asm'));
 
 const hog = require('hog-features');
 const Kernel = require('ml-kernel');
@@ -193,11 +172,14 @@ function getKernel(options) {
   return new Kernel(options.type, options);
 }
 
-module.exports = {
-  applyModel,
-  createModel,
-  train,
-  predict,
-  extractHOG,
-  predictImages
+module.exports = function(options) {
+  fs=options.fs;
+  return {
+    applyModel,
+    createModel,
+    train,
+    predict,
+    extractHOG,
+    predictImages
+  }
 };

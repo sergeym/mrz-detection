@@ -1,5 +1,5 @@
 'use strict';
-
+var _options;
 const ENVIRONMENT_IS_WEB = typeof window === 'object';
 const ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
 
@@ -32,6 +32,7 @@ if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
 async function readMrz(image, options = {}) {
   var { ocrResult, mask } = await mrzOcr(image, fontFingerprint, {
     method: 'svm',
+    fs: _options.fs,
     roiOptions,
     fingerprintOptions
   });
@@ -44,4 +45,7 @@ async function readMrz(image, options = {}) {
   // return ocrResult.lines.map((line) => line.text);
 }
 
-module.exports = readMrz;
+module.exports = function(options) {
+  _options=options;
+  return readMrz;
+}

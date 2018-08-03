@@ -2,7 +2,6 @@
 
 const { getLinesFromImage, doOcrOnLines } = require('ocr-tools');
 
-const { predictImages } = require('../svm')({fs: _options.fs});
 
 var _options;
 async function mrzOcr(image, fontFingerprint, options = {}) {
@@ -42,6 +41,7 @@ async function mrzOcr(image, fontFingerprint, options = {}) {
       }
     }
 
+    const { predictImages } = require('../svm')({fs: _options.fs});
     let predicted = await predictImages(images, 'ESC-v2');
     predicted = predicted.map((p) => String.fromCharCode(p));
     let count = 0;

@@ -7,7 +7,7 @@ const minimist = require('minimist');
 const IJS = require('image-js').Image;
 const { parse } = require('mrz');
 
-const { readMrz } = require('..');
+const { readMrz } = require('..')({fs: fs});
 
 const argv = minimist(process.argv.slice(2));
 

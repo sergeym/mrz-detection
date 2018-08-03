@@ -6,7 +6,7 @@ const fs = require('fs-extra');
 const minimist = require('minimist');
 const { Image } = require('image-js');
 
-const { getMrz } = require('..');
+const { getMrz } = require('..')({fs: fs});
 
 const argv = minimist(process.argv.slice(2));
 
